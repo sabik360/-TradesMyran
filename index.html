@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tradesmyran</title>
+<meta name="description" content="Recent insider trades from Form 4 filings.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>
+  // Set the theme before first paint to avoid a flash.
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem('tradesmyran-theme'); } catch (e) {}
+    var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
+</head>
+<body>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="brand">
+      <div class="wordmark">tradesmyran</div>
+      <div class="tagline">Insider trades from Form 4 filings</div>
+    </div>
+    <div class="masthead-actions">
+      <button id="refreshBtn" class="btn" type="button">Refresh filings</button>
+      <button id="themeBtn" class="btn" type="button">Dark</button>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Sections">
+  <button class="tab active" data-tab="latest" type="button">Latest</button>
+  <button class="tab" data-tab="feed" type="button">Insider Trading</button>
+  <button class="tab" data-tab="top" type="button">Top</button>
+  <button class="tab" data-tab="search" type="button">Search</button>
+</nav>
+
+<div class="toolbar" role="search">
+  <label class="field">Type
+    <select id="typeFilter">
+      <option value="all">All trades</option>
+      <option value="P">Buys only</option>
+      <option value="S">Sales only</option>
+    </select>
+  </label>
+  <label class="field">Min. value ($)
+    <input id="minValueFilter" type="number" min="0" step="1000" placeholder="Any">
+  </label>
+  <label class="field">Role
+    <select id="roleFilter">
+      <option value="all">All roles</option>
+      <option value="officer">Officer</option>
+      <option value="director">Director</option>
+      <option value="owner">10% owner</option>
+    </select>
+  </label>
+</div>
+
+<main>
+  <p id="statusLine" class="status">Fetching live Form 4 filings…</p>
+
+  <section id="view-latest" class="view active">
+    <div id="latestSections"></div>
+    <button id="latestMoreBtn" class="btn load-more" type="button">Load more filings</button>
+  </section>
+
+  <section id="view-feed" class="view">
+    <div id="feedTable"></div>
+    <button id="feedMoreBtn" class="btn load-more" type="button">Load more filings</button>
+  </section>
+
+  <section id="view-top" class="view">
+    <div id="topSections"></div>
+    <button id="topMoreBtn" class="btn load-more" type="button">Load more filings</button>
+  </section>
+
+  <section id="view-search" class="view">
+    <form id="searchForm" class="searchbar">
+      <input id="searchInput" type="text" placeholder="Search a ticker, company, or insider…" autocomplete="off">
+      <button class="btn primary" type="submit">Search</button>
+    </form>
+    <p class="hint">Tip: search a ticker to load its filings on demand, even if it has no trades in the recent list.</p>
+    <div id="searchResults"></div>
+  </section>
+</main>
+
+<div id="modalBackdrop" class="backdrop hidden">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button id="modalClose" class="modal-close" type="button" aria-label="Close">×</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
